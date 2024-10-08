@@ -1,0 +1,4 @@
+Django>=4.2
+# Add any other dependencies your project uses, for example:
+# Pillow==9.5.0
+# django-crispy-forms==2.0

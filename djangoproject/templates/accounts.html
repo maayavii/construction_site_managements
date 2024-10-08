@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<style>
+    /* ... (keep your existing styles) ... */
+    .profile-picture-preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-bottom: 10px;
+    }
+    .messages {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 20px;
+    }
+    .alert {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+    .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+
+<div class="account-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <img src="{% static 'images/truck1.png' %}" width="100%">
+            </div>
+            <div class="col-2">
+                <div class="form-container">
+                    <div class="form-btn">
+                        <span onclick="login()">Login</span>
+                        <span onclick="register()">Register</span>
+                        <hr id="Indicator">
+                    </div>
+
+                    {% if error %}
+                        <div class="error">{{ error }}</div>
+                    {% endif %}
+                    
+                    <!-- Login Form -->
+                    <form id="LoginForm" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="username" placeholder="Username" required>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <button type="submit" name="login" class="btn">Login</button>
+                        <a href="{% url 'password_reset' %}">Forget Password</a>
+                    </form>
+
+                    <!-- Registration Form -->
+                    <form id="RegForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" name="username" minlength="6" required placeholder="Username">
+                        <input type="email" name="email" required placeholder="Email">
+                        <input type="password" minlength="8" required name="password1" placeholder="Password">
+                        <input type="password" minlength="8" required name="password2" placeholder="Password again">
+                        <input type="text" name="name" minlength="2" required placeholder="Full Name">
+                        <input type="text" name="address" minlength="6" required placeholder="Address">
+                        <input type="text" name="phone" minlength="10" required placeholder="Phone">
+                        <input type="file" name="profile_picture" id="profile_picture" accept="image/*">
+                        <img id="profile-picture-preview" class="profile-picture-preview" src="{% static 'images/default_profile_pic.png' %}" alt="Profile Picture Preview">
+                        <button type="submit" name="register" class="btn">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+    var LoginForm = document.getElementById("LoginForm");
+    var RegForm = document.getElementById("RegForm");
+    var Indicator = document.getElementById("Indicator");
+
+    function register() {
+        RegForm.style.transform = "translateX(0px)";
+        LoginForm.style.transform = "translateX(0px)";
+        Indicator.style.transform = "translateX(100px)";
+    }
+
+    function login() {
+        RegForm.style.transform = "translateX(300px)";
+        LoginForm.style.transform = "translateX(300px)";
+        Indicator.style.transform = "translateX(0px)";
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let messages = document.querySelectorAll('.alert');
+        messages.forEach((message) => {
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000); // Hide after 5 seconds
+        });
+
+        // Profile picture preview
+        const profilePictureInput = document.getElementById('profile_picture');
+        const profilePicturePreview = document.getElementById('profile-picture-preview');
+
+        profilePictureInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePicturePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

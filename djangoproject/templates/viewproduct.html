@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<title>Product List</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .img-thumbnail {
+        max-width: 100px;
+        max-height: 100px;
+    }
+    .btn {
+        padding: 8px 16px;
+        text-align: center;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        color: white;
+    }
+    .btn-edit {
+        background-color: #4CAF50;
+    }
+    .btn-delete {
+        background-color: #f44336;
+    }
+</style>
+
+<h1>Product List</h1>
+
+<!-- Product List as a Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Product Image</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Django template loop for rendering products -->
+        {% for p in products %}
+        <tr>
+            <td>{{ p.name }}</td>
+            <td>${{ p.price }}</td>
+            <td>
+                {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="Photo of {{ p.name}}" class="img-thumbnail">
+                {% else %}
+                    <p>No image available</p>
+                {% endif %}
+            </td>
+            <td>{{ p.description }}</td>
+            <td>
+                <a href="{% url 'editProduct' p.pk  %}">
+                    <button class="btn btn-edit">Edit</button>
+                </a>
+                <a href="{% url 'delete_product' p.pk %}">
+                    <button class="btn btn-delete">Delete</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

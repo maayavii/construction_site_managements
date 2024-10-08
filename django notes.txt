@@ -1,0 +1,3 @@
+D:\django_project>projectenv\scripts\activate
+
+(projectenv) D:\django_project>
