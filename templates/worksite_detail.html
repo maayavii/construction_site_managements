@@ -1,0 +1,32 @@
+<!-- worksite_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ worksite.name }} Worksite Details</h2>
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Location:</strong> {{ worksite.location }}</p>
+            <p><strong>Description:</strong> {{ worksite.description|default:"No description provided." }}</p>
+            <p><strong>Start Date:</strong> {{ worksite.start_date }}</p>
+            <p><strong>End Date:</strong> {{ worksite.end_date|default:"Not specified." }}</p>
+
+            <!-- Display worksite images -->
+            <h4>Worksite Images:</h4>
+            <div class="row">
+                {% for image in worksite_images %}
+                    <div class="col-md-4 mb-3">
+                        <img src="{{ image.image.url }}" alt="Worksite Image" class="img-fluid">
+                    </div>
+                {% empty %}
+                    <p>No images available for this worksite.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="{% url 'user_profile' %}" class="btn btn-primary">Back to Profile</a>
+    </div>
+</div>
+{% endblock %}
